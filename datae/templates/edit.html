@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <title>Edit and Update Page</title>
+</head>
+<body>
+    <center>
+        <h1>Edit and Update User Record</h1>
+        <h2>The User Id is {{crudst.id}}</h2>
+        <hr/>
+        <form method="POST" action="/Update/{{crudst.id}}">
+            {% csrf_token %}
+        <table border="1">
+            <tr>
+                <td>User Name</td>
+                <td><input type="text" name="stname" value="{{crudst.stname}}" required></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="stemail" value="{{crudst.stemail}}" required></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" name="staddress" value="{{crudst.staddress}}" required></td>
+            </tr>
+            <tr>
+                <td>Mobile</td>
+                <td><input type="text" name="stmobile" value="{{crudst.stmobile}}" required></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" value="M" name="stgender" {% if crudst.stgender == "M" %}checked{% endif %} required> MALE  |
+                    <input type="radio" value="F" name="stgender" {% if crudst.stgender == "F" %}checked{% endif %} required> FEMALE  |
+                    <input type="radio" value="O" name="stgender" {% if crudst.stgender == "O" %}checked{% endif %} required> OTHERS
+                </td>           
+            <tr>
+                <td>Start Location</td>
+                <td><input type="text" name="ststart" value="{{crudst.ststart}}" required></td>
+            </tr> 
+            <tr>
+                <td>End Location</td>
+                <td><input type="text" name="stend" value="{{crudst.stend}}" required></td>
+            </tr> 
+            <tr>
+                <td>Bank Account</td>
+                <td><input type="number" name="stbank" value="{{crudst.stbank}}" required></td>
+            </tr> 
+            <tr>
+                <td>Aadhar</td>
+                <td><input type="number" name="staadhar" value="{{crudst.staadhar}}" required></td>
+            </tr> 
+            <tr>
+                <td>RFID</td>
+                <td><input type="text" name="strfid" value="{{crudst.strfid}}" required></td>
+            </tr> 
+        </table>
+        <input type="submit" value="Update User Record">
+        <br>
+        <a href="{% url 'home' %}">Home</a>
+        <br>
+        <a href="{% url 'usertable' %}">User Table</a>
+        <br>
+        <a href="{% url 'locationtable' %}">Location Table</a>
+        <hr/>
+        {% if messages %}
+        {% for result in messages %}
+        <b style="color: green;">{{result}}</b>
+        {% endfor %}
+        {% endif %}
+    </form>
+    </center>
+</body>
+</html>

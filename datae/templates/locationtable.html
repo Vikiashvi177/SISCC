@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This is Index page</title>
+</head>
+<body>
+    <center>
+        <h1>USER DATABASE</h1>
+        <hr/>
+        <input type="text" id="rfidInput" placeholder="Search by RFID" onkeyup="searchByRFID()">
+        <br><br>
+        <div id="noRecords" style="display: none;">No records found</div>
+        <br>
+        <a href="{% url 'home' %}">Home</a>
+        <br>
+        <a href="{% url 'stinsert' %}">Add User Record</a>
+        <br>
+        <a href="{% url 'usertable' %}">User Table</a>
+        <br><br>
+        <table border="1" id="locationTable">
+            <tr>
+                <th>RFID</th>
+                <th>Start Location</th>
+                <th>End Location</th>
+            </tr>
+            {% for displayst in crudst %}
+            <tr>
+                <td>{{displayst.strfid}}</td>
+                <td>{{displayst.ststart}}</td>
+                <td>{{displayst.stend}}</td>
+                <td><a href="/Edit/{{displayst.id}}">Edit</a></td>
+                <td><a href="/Delete/{{displayst.id}}" onclick="return confirm('Are You Sure You Want to DELETE ?')">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </center>
+
+    <script>
+        function searchByRFID() {
+            // Get the RFID input value
+            var rfidInput = document.getElementById("rfidInput").value.toLowerCase();
+            
+            // Get the table rows
+            var rows = document.querySelectorAll("#locationTable tr");
+    
+            // Loop through each row and hide/show based on the RFID input
+            for (var i = 1; i < rows.length; i++) { // Start from 1 to skip the table header row
+                var row = rows[i];
+                var rfidCell = row.getElementsByTagName("td")[0]; // Assuming RFID is in the first cell
+    
+                if (rfidCell) {
+                    var rfidText = rfidCell.textContent || rfidCell.innerText;
+                    rfidText = rfidText.toLowerCase();
+    
+                    // Check if the RFID starts with the entered value
+                    if (rfidText.startsWith(rfidInput)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            }
+    
+            // Show/hide the "No records found" message
+            var noRecords = document.getElementById("noRecords");
+            if (rows.length <= 1) {
+                noRecords.style.display = "block";
+            } else {
+                noRecords.style.display = "none";
+            }
+        }
+    </script>
+    
+</body>
+</html>

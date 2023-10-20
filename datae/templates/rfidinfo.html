@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RFID Info</title>
+</head>
+<body>
+    <h1>RFID Info</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>RFID</th>
+                <th>Start Location</th>
+                <th>End Location</th>
+                <th>Price</th>
+                <th>Route</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rfid_info in rfid_info_list %}
+            <tr>
+                <td>{{ rfid_info.rfid }}</td>
+                <td>{{ rfid_info.start_location }}</td>
+                <td>{{ rfid_info.end_location }}</td>
+                <td>{{ rfid_info.price }}</td>
+                <td>{{ rfid_info.route }}</td>
+                <td>{{ rfid_info.time }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

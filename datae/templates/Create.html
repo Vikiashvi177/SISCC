@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Record</title>
+    <script>
+        function validateForm() {
+            var email = document.forms["userForm"]["stemail"].value;
+            var mobile = document.forms["userForm"]["stmobile"].value;
+            var aadhar = document.forms["userForm"]["staadhar"].value;
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            var mobilePattern = /^\d{10}$/;
+            var aadharPattern = /^\d{12}$/;
+
+            if (!email.match(emailPattern)) {
+                alert("Invalid email format");
+                return false;
+            }
+
+            if (!mobile.match(mobilePattern)) {
+                alert("Mobile number must be 10 digits");
+                return false;
+            }
+
+            if (!aadhar.match(aadharPattern)) {
+                alert("Aadhar number must be 12 digits");
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <h1>Add new User Record</h1>
+        <hr/>
+        <form name="userForm" method="POST" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <table border="1">
+                <tr>
+                    <td>User Name</td>
+                    <td><input type="text" placeholder="User Name .." name="stname" required></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input type="text" placeholder="Email .." name="stemail" required></td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td><input type="text" placeholder="Address .." name="staddress" required></td>
+                </tr>
+                <tr>
+                    <td>Mobile</td>
+                    <td><input type="text" placeholder="Mobile No." name="stmobile" required></td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>
+                        <input type="radio" value="M" name="stgender" group="stgender" required> MALE  |
+                        <input type="radio" value="F" name="stgender" group="stgender" required> FEMALE  |
+                        <input type="radio" value="O" name="stgender" group="stgender" required> OTHERS
+                    </td>
+                </tr>         
+                <tr style="display: none;">
+                    <td>Start Location</td>
+                    <td><input type="text" name="ststart" value="N/A" readonly></td>
+                </tr>
+                <tr style="display: none;">
+                    <td>End Location</td>
+                    <td><input type="text" name="stend" value="N/A" readonly></td>
+                </tr>
+                <tr>
+                    <td>Bank Account</td>
+                    <td><input type="number" placeholder="Account No." name="stbank" required></td>
+                </tr>
+                <tr>
+                    <td>Aadhar</td>
+                    <td><input type="number" placeholder="Aadhar ID" name="staadhar" required></td>
+                </tr>              
+                <tr>
+                    <td>RFID</td>
+                    <td><input type="text" placeholder="RFID Number" name="strfid" required></td>
+                </tr>
+            </table>
+            <input type="submit" value="Insert Record"/>
+            <br><br>
+            <a href="{% url 'home' %}">Home</a>
+            <br>
+            <a href="{% url 'usertable' %}">User Table</a>
+            <br>
+            <a href="{% url 'locationtable' %}">Location Table</a>
+            <hr/>
+            {% if messages %}
+            {% for result in messages %}
+            <b style="color: green;">{{result}}</b>
+            {% endfor %}
+            {% endif %}
+        </form>
+    </center>
+</body>
+</html>

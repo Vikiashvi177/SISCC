@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Table</title>
+</head>
+<body>
+    <center>
+        <h1>USER DATABASE</h1>
+        <hr/>
+        <input type="text" id="rfidInput" placeholder="Search by RFID" onkeyup="searchByRFID()">
+        <br><br>
+        <div id="noRecords" style="display: none;">No records found</div>
+        <br>
+        <a href="{% url 'home' %}">Home</a>
+        <br>
+        <a href="{% url 'stinsert' %}">Add User Record</a>
+        <br>
+        <a href="{% url 'locationtable' %}">Location Table</a>
+        <br><br>
+        <table border="1" id="userTable">
+            <tr>
+                <th>User Id</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Mobile</th>
+                <th>Gender</th>
+                <th>Bank Account</th>
+                <th>Aadhar</th>
+                <th>RFID</th>
+            </tr>
+            {% for displayst in crudst %}
+            <tr>
+                <td>{{displayst.id}}</td>
+                <td>{{displayst.stname}}</td>
+                <td>{{displayst.stemail}}</td>
+                <td>{{displayst.staddress}}</td>
+                <td>{{displayst.stmobile}}</td>
+                <td>{{displayst.stgender}}</td>
+                <td>********</td>
+                <td>********</td>
+                <td>{{displayst.strfid}}</td>
+                <td><a href="/Edit/{{displayst.id}}">Edit</a></td>
+                <td><a href="/Delete/{{displayst.id}}" onclick="return confirm('Are You Sure You Want to DELETE ?')">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </center>   
+
+    <script>
+        function searchByRFID() {
+            // Get the RFID input value
+            var rfidInput = document.getElementById("rfidInput").value.toLowerCase();
+            
+            // Get the table rows
+            var rows = document.querySelectorAll("#userTable tr");
+
+            // Loop through each row and hide/show based on the RFID input
+            for (var i = 1; i < rows.length; i++) { // Start from 1 to skip the table header row
+                var row = rows[i];
+                var rfidCell = row.getElementsByTagName("td")[8]; // Assuming RFID is in the ninth cell
+
+                if (rfidCell) {
+                    var rfidText = rfidCell.textContent || rfidCell.innerText;
+                    rfidText = rfidText.toLowerCase();
+
+                    // Check if the RFID starts with the entered value
+                    if (rfidText.startsWith(rfidInput)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            }
+
+            // Show/hide the "No records found" message
+            var noRecords = document.getElementById("noRecords");
+            if (rows.length <= 1) {
+                noRecords.style.display = "block";
+            } else {
+                noRecords.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

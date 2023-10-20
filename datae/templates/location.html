@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Route and RFID Checker</title>
+</head>
+<body>
+    <h2>Search RFID</h2>
+    <input type="text" id="rfidSearchInput" placeholder="Enter RFID" autofocus>
+    <button onclick="search()">Search</button>
+    <p id="rfidSearchResult"></p>
+    <p id="locationData"></p>
+
+    <script>
+        var route = {
+            "102": ['Broadway', 'R.B.I. Parrys', 'Secretariat', 'Island Ground', 'Anna Square', 'Marina Beach', 'Kannagi Statue', 'Queen Marys College', 'Light House (All India Radio)', 'Employment Office (Santhome)', 'Foreshore Estate', 'M.R.C. Nagar', 'Iyappan Koil', 'Music College', 'Andhra Mahila Sabha Hospital (Sathya Studios)', 'Adyar Signal', 'Adyar O.T.', 'Adyar Depot', 'Indira Nagar Water Tank', 'Jayanthi Theatre', 'S.R.P. Tools', 'I.G.P.', 'Kandanchavadi', 'Perungudi', 'Seevaram', 'Jain College', 'Mettukuppam','PTC Quarters', 'Okkiyampet', 'T.C.S.', 'Karapakkam', 'Accenture', 'Sholinganallur', 'Satyabhama Dental College and Hospital', 'Semmancheri', 'Navallur', 'Siruseri (Muttukadu)', 'S.I.P.C.O.T. (Muttukadu)', 'Vaniyanchavadi Padma Adarsh School', 'Kazhipattur', 'Hindustan College', 'Chettinad Hospital', 'Padur', 'Vandalur Road Junction', 'Kelambakkam'],
+        };
+
+        var coordinates = {
+            "Broadway": [13.08983081238719, 80.28365315867777],
+            "R.B.I Parrys": [13.082546496371146, 80.28900802808948],
+            "Secretariat": [13.079895810648319, 80.28713201237484],
+            "Island Ground": [13.073915336774673, 80.2845861419579],
+            "Anna Square": [13.06700533852986, 80.28456152956778],
+            "Marina Beach": [13.062729453000912, 80.2840950054241],
+            "Kannagi Statue": [13.05697271346433, 80.28242076548351],
+            "Queen Marys College": [13.045883078138502, 80.28030460162611],
+            "Light House (All India Radio)": [13.039207954450909, 80.27911384510541],
+            "Employment Office (Santhome)": [13.032889632092727, 80.27751670163444],
+            "Foreshore Estate": [13.02561713177337, 80.27537121151293],
+            "M.R.C Nagar": [13.021077166778188, 80.27014462840329],
+            "Iyappan Koil": [13.019718320887964, 80.26851275019749],
+            "Music College": [13.045676675341797, 80.26005040425962],
+            "Andhra Mahila Sabha Hospital (Sathya Studios)": [13.016538456256018, 80.2596796257812],
+            "Adyar Signal": [13.007178806840354, 80.25910471811322],
+            "Adyar O.T": [13.005983333258163, 80.25753335689963],
+            "Adyar Depot": [12.998861775568024, 80.25616976162388],
+            "Indira Nagar Water Tank": [12.995162968910194, 80.25303579068628],
+            "Jayatnhi Theatre": [12.989235320173117, 80.25585403963636],
+            "S.R.P Tools": [12.978706844642089, 80.25282793628853],
+            "I.G.P": [12.972193285147275, 80.25017144135387],
+            "Kandanchavadi": [12.96705604025181, 80.24792070236396],
+            "Perungudi": [12.965170552488, 80.24747943355453],
+            "Seevaram": [12.951737376935265, 80.24176632535769],
+            "Jain College": [12.946978061060982, 80.24016605662446],
+            "Mettukuppam": [12.939251249323515, 80.23562016749823],
+            "PTC Quarters":[12.934331137721973, 80.23320609485236],
+            "Okkiyampet": [12.926013298870268, 80.23114409855619],
+            "T.C.S": [12.919671303110215, 80.23024998026177],
+            "Karapakkam": [12.913373542478487, 80.2293668175079],
+            "Accenture Sholinganallur": [12.906131669946408, 80.22838154573698],
+            "Sholinganallur": [12.898906536564676, 80.22796292463215],
+            "Sholinganallur Goverment School": [12.89357085024554, 80.22765452123913],
+            "Ponniamman Kovil": [12.88589165457132, 80.22718318609896],
+            "Kumaran Nagar": [12.87796121055411, 80.22697533132852],
+            "Satyabhama College": [12.872136600360838, 80.2267888448776],
+            "Semmancheri": [12.859764862454268, 80.2265875482625],
+            "A.G.S Navallur": [12.850294267931359, 80.22684033156943],
+            "Navallur": [12.845314796208786, 80.22672842275283],
+            "Egattur": [12.836870386761344, 80.22851890930806],
+            "Siruseri": [12.832746131167077, 80.2292626120463],
+            "S.I.P.C.O.T IT Park": [12.83106455083716, 80.22950285303372],
+            "Vaniyanchavadi Padma Adarsh School": [12.826068985596496, 80.23164764094648],
+            "Khazhipattur": [12.819126097236486, 80.23081197087076],
+            "Akshaya Adair": [12.811027810330993, 80.22824380027018],
+            "Padur": [12.805360635743687, 80.22428712189634],
+            "Hindustan College": [12.80112196456982, 80.22370799619375],
+            "Chettinad Hospital": [12.796238248980934, 80.22307040684107],
+            "Vandalur Road Junction": [12.789639570907127, 80.22164868099078],
+            "Kelambakkam": [12.786271564584633, 80.22032565230018],
+            "Kelambakkam Bus Depot": [12.786235264248756, 80.22230533664413],
+        };
+
+
+        function getLocationAndUpdate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var x = document.getElementById("locationData");
+                    var userLatitude = position.coords.latitude;
+                    var userLongitude = position.coords.longitude;
+                    var nearestStop = findNearestStop(userLatitude, userLongitude);
+                    var routeNumber = findRouteNumber(nearestStop);
+                    
+                    x.innerHTML = "Latitude: " + userLatitude +
+                        "<br>Longitude: " + userLongitude +
+                        "<br>Nearest Stop: " + nearestStop +
+                        "<br>Nearest Stop Coordinates: " + coordinates[nearestStop][0] + ", " + coordinates[nearestStop][1]+
+                        "<br>Route: " + (routeNumber ? routeNumber : "N/A")
+                }, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showError(error) {
+            var x = document.getElementById("locationData");
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    x.innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
+
+        function findNearestStop(userLat, userLng) {
+            var nearestStop = null;
+            var minDistance = Number.MAX_VALUE;
+
+            for (var stop in coordinates) {
+                var stopLat = coordinates[stop][0];
+                var stopLng = coordinates[stop][1];
+                var distance = calculateDistance(userLat, userLng, stopLat, stopLng);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestStop = stop;
+                }
+            }
+
+            return nearestStop;
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2 - lat1);
+            var dLon = deg2rad(lon2 - lon1);
+            var a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2)
+                ; 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var distance = R * c; // Distance in km
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+
+        function findRouteNumber(stopName) {
+            for (var routeNumber in route) {
+                if (route[routeNumber].includes(stopName)) {
+                    return routeNumber;
+                }
+            }
+            return null;
+        }
+
+        function search() {
+            var rfidInput = document.getElementById("rfidSearchInput").value;
+            var resultMessage = document.getElementById("rfidSearchResult");
+            var locationData = document.getElementById("locationData");
+
+            if (rfidInput) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLatitude = position.coords.latitude;
+                        var userLongitude = position.coords.longitude;
+                        var nearestStop = findNearestStop(userLatitude, userLongitude);
+
+                        // Send the RFID and nearestStop in the AJAX request
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("GET", "/check_rfid?rfid=" + rfidInput + "&nearestStop=" + nearestStop, true);
+
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                resultMessage.textContent = response.message;
+                                
+                                // Reload the page after displaying the message
+                                if (response.message === 'RFID found and locations updated' || response.message === 'RFID not found in the database') {
+                                    window.location.reload();
+                                }
+                            } else {
+                                resultMessage.textContent = "Error occurred while checking RFID.";
+                            }
+                        };
+
+                        xhr.send();
+                    }, showError);
+                } else {
+                    locationData.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            } else {
+                resultMessage.textContent = "Please enter an RFID to search.";
+            }
+        }
+
+
+
+        var rfidInput = document.getElementById("rfidSearchInput");
+        rfidInput.addEventListener("input", function() {
+            if (rfidInput.value.length === 10) {
+                search();
+            }
+        });
+
+    </script>
+</body>
+</html>

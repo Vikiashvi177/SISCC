@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get RFID Data</title>
+</head>
+<body>
+    <h1>Get RFID Data</h1>
+    <form method="post" action="{% url 'get_data' %}">
+        {% csrf_token %}
+        <label for="rfid">Enter RFID:</label>
+        <input type="text" id="rfid" name="rfid">
+        <button type="submit">Get Data</button>
+    </form>
+
+    {% if not rfid_info %}
+    <h2>RFID '{{ searched_rfid }}' does not exist in the database.</h2>
+    {% else %}
+    <h2>History for RFID: {{ searched_rfid }}</h2>
+    <h2>Total Amount: ₹{{ total_amount }}</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Start Location</th>
+                <th>End Location</th>
+                <th>Total Price</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in rfid_info %}
+            <tr>
+                <td>{{ entry.start_location }}</td>
+                <td>{{ entry.end_location }}</td>
+                <td>{{ entry.price }}</td>
+                <td>{{ entry.time }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>

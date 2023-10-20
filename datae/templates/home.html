@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>home</h1>
+    <a href="{% url 'stinsert' %}">Add User Record</a>
+    <br>
+    <a href="{% url 'usertable' %}">User Table</a>
+    <br>
+    <a href="{% url 'locationtable' %}">Location Table</a>
+    <br>
+    <a href="{% url 'location' %}">Location</a>
+    <br>
+    <a href="{% url 'view_rfid_info' %}">HISTORY - ALL USERS</a>
+    <br>
+    <a href="{% url 'get_data' %}">HISTORY - PARTICULAR USER</a>
+</body>
+</html>
